@@ -51,6 +51,7 @@ for (i = 0; i < urlMax; i++) {
   fragment.appendChild(renderPhotos(photos[i]));
 }
 similarListElement.appendChild(fragment);
+
 // ЗАДАНИЕ 3.3
 document.querySelector('.big-picture').classList.remove('hidden');
 var bigPicture = document.querySelector('.big-picture');
