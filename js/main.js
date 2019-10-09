@@ -184,13 +184,16 @@ slider.addEventListener('mouseup', function () {
 });
 // валидация хэш-тэгов///
 var hashTagTextBox = document.querySelector('.text__hashtags');
-var hasDublicates = function (arr) {
-  var uniqArr = new Set(arr);
-  if (uniqArr.size === arr.length) {
-    return false;
+function hasDublicates(arr) {
+  var newArr = [];
+  for (i = 0; i < arr.length; i++) {
+    if (newArr.indexOf(arr[i] !== -1)) {
+      return true;
+    }
+    newArr.push(arr[i]);
   }
-  return true;
-};
+  return false;
+}
 hashTagTextBox.addEventListener('change', function () {
   var str = hashTagTextBox.value.toUpperCase().trim();
   var array = str.split(' ');
