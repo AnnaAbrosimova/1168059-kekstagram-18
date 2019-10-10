@@ -73,7 +73,7 @@ var closeBigPicture = document.querySelector('.big-picture__cancel');
 closeBigPicture.addEventListener('click', function () {
   bigPicture.classList.add('hidden');
 });
-// ЗАДАНИЕ 4.1
+// ЗАДАНИЕ 4.2
 var ESC_KEYCODE = 27;
 var loadFileButton = document.querySelector('.img-upload__input');
 var formEditPicture = document.querySelector('.img-upload__overlay');
@@ -184,13 +184,16 @@ slider.addEventListener('mouseup', function () {
 });
 // валидация хэш-тэгов///
 var hashTagTextBox = document.querySelector('.text__hashtags');
-var hasDublicates = function (arr) {
-  var uniqArr = new Set(arr);
-  if (uniqArr.size === arr.length) {
-    return false;
+function hasDuplicates(arr) {
+  var newArr = [];
+  for (i = 0; i < arr.length; i++) {
+    if (newArr.indexOf(arr[i]) !== -1) {
+      return true;
+    }
+    newArr.push(arr[i]);
   }
-  return true;
-};
+  return false;
+}
 hashTagTextBox.addEventListener('change', function () {
   var str = hashTagTextBox.value.toUpperCase().trim();
   var array = str.split(' ');
@@ -202,7 +205,7 @@ hashTagTextBox.addEventListener('change', function () {
     hashTagTextBox.setCustomValidity('');
   }
   // проверка на дубликаты
-  if (hasDublicates(array)) {
+  if (hasDuplicates(array)) {
     hashTagTextBox.setCustomValidity('один и тот же хэш-тег не может быть использован дважды');
     return;
   } else {
