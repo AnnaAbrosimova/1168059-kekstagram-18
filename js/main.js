@@ -247,20 +247,25 @@ commentTextBox.addEventListener('change', function () {
 });
 // Задание 4.3
 var ENTER_KEYCODE = 13;
-var randomImage = document.querySelectorAll('.picture__img');
+var randomImage = document.querySelectorAll('.picture');
 var bigPictureContainer = document.querySelector('.big-picture');
 var bigPicturePhotoImg = document.querySelector('.big-picture__img>img');
 for (i = 0; i < randomImage.length; i++) {
   randomImage[i].addEventListener('click', function (evt) {
-    bigPictureContainer.classList.remove('hidden');
-    var src = evt.srcElement.getAttribute('src');
+    var src;
+    if (evt.target.hasAttribute('src')) {
+      src = evt.target.getAttribute('src');
+    } else {
+      src = evt.target.querySelector('.picture__img').getAttribute('src');
+    }
     bigPicturePhotoImg.setAttribute('src', src);
+    bigPictureContainer.classList.remove('hidden');
   });
   randomImage[i].addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      bigPictureContainer.classList.remove('hidden');
-      var src = document.activeElement.getAttribute('src');
+      var src = evt.target.querySelector('.picture__img').getAttribute('src');
       bigPicturePhotoImg.setAttribute('src', src);
+      bigPictureContainer.classList.remove('hidden');
     }
   });
 }
