@@ -184,9 +184,9 @@ slider.addEventListener('mouseup', function () {
 });
 // валидация хэш-тэгов///
 var hashTagTextBox = document.querySelector('.text__hashtags');
-var HASHTAGMAXNUM = 5;
-var HASHTAGMAXLENGTH = 20;
-var COMMENTMAXLENGTH = 140;
+var HASHTAG_MAX_NUM = 5;
+var HASHTAG_MAX_LENGTH = 20;
+var COMMENT_MAX_LENGTH = 140;
 var hasDuplicates = function (arr) {
   var newArr = [];
   for (i = 0; i < arr.length; i++) {
@@ -201,7 +201,7 @@ hashTagTextBox.addEventListener('change', function () {
   var str = hashTagTextBox.value.toUpperCase().trim();
   var array = str.split(' ');
   // проверка на длину массива
-  if (array.length > HASHTAGMAXNUM) {
+  if (array.length > HASHTAG_MAX_NUM) {
     hashTagTextBox.setCustomValidity('нельзя указать больше пяти хэш-тегов');
     return;
   } else {
@@ -224,7 +224,7 @@ hashTagTextBox.addEventListener('change', function () {
       hashTagTextBox.setCustomValidity('хеш-тег не может состоять только из одной решётки');
       break;
     }
-    if (hashtag.length > HASHTAGMAXLENGTH) {
+    if (hashtag.length > HASHTAG_MAX_LENGTH) {
       hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решётку');
       break;
     } else {
@@ -239,7 +239,7 @@ hashTagTextBox.addEventListener('keydown', function (evt) {
 });
 // проверка комментариев
 commentTextBox.addEventListener('change', function () {
-  if (commentTextBox.value.length > COMMENTMAXLENGTH) {
+  if (commentTextBox.value.length > COMMENT_MAX_LENGTH) {
     commentTextBox.setCustomValidity('длина комментария не может составлять больше 140 символов');
   } else {
     commentTextBox.setCustomValidity('');
@@ -259,13 +259,13 @@ for (i = 0; i < randomImage.length; i++) {
   randomImage[i].addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       bigPictureContainer.classList.remove('hidden');
-      var src2 = document.activeElement.getAttribute('src');
-      bigPicturePhotoImg.setAttribute('src', src2);
-    }
-  });
-  randomImage[i].addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      bigPictureContainer.classList.add('hidden');
+      var src = document.activeElement.getAttribute('src');
+      bigPicturePhotoImg.setAttribute('src', src);
     }
   });
 }
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    bigPictureContainer.classList.add('hidden');
+  }
+});
