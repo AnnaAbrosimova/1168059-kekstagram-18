@@ -53,7 +53,7 @@ for (i = 0; i < urlMax; i++) {
 similarListElement.appendChild(fragment);
 
 // ЗАДАНИЕ 3.3
-document.querySelector('.big-picture').classList.remove('hidden');
+// document.querySelector('.big-picture').classList.remove('hidden');
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.querySelector('.big-picture__img').setAttribute('src', photos[0].url);
 bigPicture.querySelector('.likes-count').textContent = photos[0].likes;
@@ -184,28 +184,31 @@ slider.addEventListener('mouseup', function () {
 });
 // валидация хэш-тэгов///
 var hashTagTextBox = document.querySelector('.text__hashtags');
-function hasDublicates(arr) {
+var HASHTAG_MAX_NUM = 5;
+var HASHTAG_MAX_LENGTH = 20;
+var COMMENT_MAX_LENGTH = 140;
+var hasDuplicates = function (arr) {
   var newArr = [];
   for (i = 0; i < arr.length; i++) {
-    if (newArr.indexOf(arr[i] !== -1)) {
+    if (newArr.indexOf(arr[i]) !== -1) {
       return true;
     }
     newArr.push(arr[i]);
   }
   return false;
-}
+};
 hashTagTextBox.addEventListener('change', function () {
   var str = hashTagTextBox.value.toUpperCase().trim();
   var array = str.split(' ');
   // проверка на длину массива
-  if (array.length > 5) {
+  if (array.length > HASHTAG_MAX_NUM) {
     hashTagTextBox.setCustomValidity('нельзя указать больше пяти хэш-тегов');
     return;
   } else {
     hashTagTextBox.setCustomValidity('');
   }
   // проверка на дубликаты
-  if (hasDublicates(array)) {
+  if (hasDuplicates(array)) {
     hashTagTextBox.setCustomValidity('один и тот же хэш-тег не может быть использован дважды');
     return;
   } else {
@@ -221,7 +224,7 @@ hashTagTextBox.addEventListener('change', function () {
       hashTagTextBox.setCustomValidity('хеш-тег не может состоять только из одной решётки');
       break;
     }
-    if (hashtag.length > 20) {
+    if (hashtag.length > HASHTAG_MAX_LENGTH) {
       hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решётку');
       break;
     } else {
@@ -234,12 +237,40 @@ hashTagTextBox.addEventListener('keydown', function (evt) {
     evt.stopPropagation();
   }
 });
-// })
 // проверка комментариев
 commentTextBox.addEventListener('change', function () {
-  if (commentTextBox.value.length > 140) {
+  if (commentTextBox.value.length > COMMENT_MAX_LENGTH) {
     commentTextBox.setCustomValidity('длина комментария не может составлять больше 140 символов');
   } else {
     commentTextBox.setCustomValidity('');
+  }
+});
+// Задание 4.3
+var ENTER_KEYCODE = 13;
+var randomImage = document.querySelectorAll('.picture');
+var bigPictureContainer = document.querySelector('.big-picture');
+var bigPicturePhotoImg = document.querySelector('.big-picture__img>img');
+for (i = 0; i < randomImage.length; i++) {
+  randomImage[i].addEventListener('click', function (evt) {
+    var src;
+    if (evt.target.hasAttribute('src')) {
+      src = evt.target.getAttribute('src');
+    } else {
+      src = evt.target.querySelector('.picture__img').getAttribute('src');
+    }
+    bigPicturePhotoImg.setAttribute('src', src);
+    bigPictureContainer.classList.remove('hidden');
+  });
+  randomImage[i].addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      var src = evt.target.querySelector('.picture__img').getAttribute('src');
+      bigPicturePhotoImg.setAttribute('src', src);
+      bigPictureContainer.classList.remove('hidden');
+    }
+  });
+}
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    bigPictureContainer.classList.add('hidden');
   }
 });
