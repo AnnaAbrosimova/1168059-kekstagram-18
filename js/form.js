@@ -20,6 +20,8 @@
   };
   loadFileButton.addEventListener('change', function () {
     openForm();
+
+    document.querySelector('.img-upload__effect-level').classList.add('hidden');
   });
   closePicture.addEventListener('click', function () {
     closeForm();
@@ -33,6 +35,26 @@
   var marvinRadioBtn = document.querySelector('#effect-marvin');
   var phobosRadioBtn = document.querySelector('#effect-phobos');
   var heatRadioBtn = document.querySelector('#effect-heat');
+  var setSliderPosition = function (value) {
+    var line = document.querySelector('.effect-level__line');
+    var depth = document.querySelector('.effect-level__depth');
+    slider.style.left = value * line.offsetWidth + 'px';
+    depth.style.width = value * 100 + '%';
+  };
+  var setFilter = function () {
+    var slidervalue = document.querySelector('.effect-level__value');
+    if (preview.classList.contains('effects__preview--chrome')) {
+      preview.style.filter = 'grayscale(' + slidervalue.value + '%)';
+    } else if (preview.classList.contains('effects__preview--sepia')) {
+      preview.style.filter = 'sepia(' + slidervalue.value + '%)';
+    } else if (preview.classList.contains('effects__preview--marvin')) {
+      preview.style.filter = 'invert(' + slidervalue.value + '%)';
+    } else if (preview.classList.contains('effects__preview--phobos')) {
+      preview.style.filter = 'blur(' + slidervalue.value * 5 / 100 + 'px)';
+    } else if (preview.classList.contains('effects__preview--heat')) {
+      preview.style.filter = 'brightness(' + slidervalue.value * 3 / 100 + ')';
+    }
+  };
   originalRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--none');
     preview.classList.remove('effects__preview--chrome');
@@ -52,6 +74,7 @@
     preview.classList.remove('effects__preview--heat');
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
+    setSliderPosition(1.0);
   });
   sepiaRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--sepia');
@@ -62,6 +85,7 @@
     preview.classList.remove('effects__preview--heat');
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
+    setSliderPosition(1.0);
   });
   marvinRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--marvin');
@@ -72,6 +96,7 @@
     preview.classList.remove('effects__preview--sepia');
     preview.classList.remove('effects__preview--phobos');
     preview.classList.remove('effects__preview--heat');
+    setSliderPosition(1.0);
   });
   phobosRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--phobos');
@@ -82,6 +107,7 @@
     preview.classList.remove('effects__preview--sepia');
     preview.classList.remove('effects__preview--marvin');
     preview.classList.remove('effects__preview--heat');
+    setSliderPosition(1.0);
   });
   heatRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--heat');
@@ -92,6 +118,7 @@
     preview.classList.remove('effects__preview--phobos');
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
+    setSliderPosition(1.0);
   });
   slider.addEventListener('mouseup', function () {
     var slidervalue = document.querySelector('.effect-level__value');
@@ -106,6 +133,45 @@
     } else if (preview.classList.contains('effects__preview--heat')) {
       preview.style.filter = 'brightness(' + slidervalue.value * 3 / 100 + ')';
     }
+  });
+  slider.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX
+    };
+    var dragged = false;
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      dragged = true;
+      var shift = {
+        x: startCoords.x - moveEvt.clientX
+      };
+      var line = document.querySelector('.effect-level__line');
+      var leftCandidate = slider.offsetLeft - shift.x;
+      if (leftCandidate > 0 && leftCandidate < line.offsetWidth) {
+        startCoords = {
+          x: moveEvt.clientX
+        };
+        setSliderPosition(leftCandidate / line.offsetWidth);
+        var slidervalue = document.querySelector('.effect-level__value');
+        slidervalue.value = leftCandidate / line.offsetWidth * 100;
+        setFilter();
+      }
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      if (dragged) {
+        var onClickPreventDefault = function () {
+          evt.preventDefault();
+          slider.removeEventListener('click', onClickPreventDefault);
+        };
+        slider.addEventListener('click', onClickPreventDefault);
+      }
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
   // валидация хэш-тэгов///
   var hashTagTextBox = document.querySelector('.text__hashtags');
