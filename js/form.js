@@ -4,6 +4,10 @@
   var formEditPicture = document.querySelector('.img-upload__overlay');
   var closePicture = document.querySelector('.img-upload__cancel');
   var commentTextBox = document.querySelector('.text__description');
+  var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
+  window.ENTER_KEYCODE = ENTER_KEYCODE;
+  window.ESC_KEYCODE = ESC_KEYCODE;
   var closeForm = function () {
     document.querySelector('.img-upload__input').value = '';
     formEditPicture.classList.add('hidden');
@@ -75,6 +79,7 @@
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
     setSliderPosition(1.0);
+    controlValue.setAttribute('value', '100%');
   });
   sepiaRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--sepia');
@@ -86,6 +91,7 @@
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
     setSliderPosition(1.0);
+    controlValue.setAttribute('value', '100%');
   });
   marvinRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--marvin');
@@ -97,6 +103,7 @@
     preview.classList.remove('effects__preview--phobos');
     preview.classList.remove('effects__preview--heat');
     setSliderPosition(1.0);
+    controlValue.setAttribute('value', '100%');
   });
   phobosRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--phobos');
@@ -108,6 +115,7 @@
     preview.classList.remove('effects__preview--marvin');
     preview.classList.remove('effects__preview--heat');
     setSliderPosition(1.0);
+    controlValue.setAttribute('value', '100%');
   });
   heatRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--heat');
@@ -119,6 +127,7 @@
     document.querySelector('.img-upload__effect-level').classList.remove('hidden');
     preview.removeAttribute('style');
     setSliderPosition(1.0);
+    controlValue.setAttribute('value', '100%');
   });
   slider.addEventListener('mouseup', function () {
     var slidervalue = document.querySelector('.effect-level__value');
@@ -234,6 +243,44 @@
       commentTextBox.setCustomValidity('длина комментария не может составлять больше 140 символов');
     } else {
       commentTextBox.setCustomValidity('');
+    }
+  });
+  // изменение размера изображения
+  var controlSmall = document.querySelector('.scale__control--smaller');
+  var controlBig = document.querySelector('.scale__control--bigger');
+  var controlValue = document.querySelector('.scale__control--value');
+  controlValue.setAttribute('value', '100%');
+  var STEP = 25;
+  var zoom = function () {
+    if (controlValue.value !== '100%') {
+      var val = controlValue.getAttribute('value');
+      var val2 = val.slice(0, -1);
+      controlValue.setAttribute('value', parseInt(val2, 10) + STEP + '%');
+      preview.style.transform = 'scale(' + (parseInt(val2, 10) + STEP) / 100 + ')';
+    }
+  };
+  var reductImg = function () {
+    if (controlValue.value !== '25%') {
+      var val = controlValue.getAttribute('value');
+      var val2 = val.slice(0, -1);
+      controlValue.setAttribute('value', parseInt(val2, 10) - STEP + '%');
+      preview.style.transform = 'scale(' + (parseInt(val2, 10) - STEP) / 100 + ')';
+    }
+  };
+  controlBig.addEventListener('keydown', function (evt) {
+    if ((evt.keyCode === window.ENTER_KEYCODE) && (controlBig === document.activeElement)) {
+      zoom();
+    }
+  });
+  controlBig.addEventListener('click', function () {
+    zoom();
+  });
+  controlSmall.addEventListener('click', function () {
+    reductImg();
+  });
+  controlSmall.addEventListener('keydown', function (evt) {
+    if ((evt.keyCode === window.ENTER_KEYCODE) && (controlSmall === document.activeElement)) {
+      reductImg();
     }
   });
 })();
