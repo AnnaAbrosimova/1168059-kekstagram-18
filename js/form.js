@@ -4,6 +4,7 @@
   var formEditPicture = document.querySelector('.img-upload__overlay');
   var closePicture = document.querySelector('.img-upload__cancel');
   var commentTextBox = document.querySelector('.text__description');
+  var imgForm = document.querySelector('#upload-select-image');
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
   window.ENTER_KEYCODE = ENTER_KEYCODE;
@@ -15,8 +16,13 @@
   };
   var openForm = function () {
     formEditPicture.classList.remove('hidden');
+    imgForm.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      window.upload('https://js.dump.academy/kekstagram', new FormData(imgForm), onSuccess, onError);
+    });
     document.addEventListener('keydown', closeFormEsc);
   };
+
   var closeFormEsc = function (evt) {
     if ((evt.keyCode === window.ESC_KEYCODE) && (commentTextBox !== document.activeElement)) {
       closeForm();
@@ -24,7 +30,6 @@
   };
   loadFileButton.addEventListener('change', function () {
     openForm();
-
     document.querySelector('.img-upload__effect-level').classList.add('hidden');
   });
   closePicture.addEventListener('click', function () {
@@ -59,7 +64,7 @@
       preview.style.filter = 'brightness(' + slidervalue.value * 3 / 100 + ')';
     }
   };
-  originalRadioBtn.addEventListener('click', function () {
+  var returnOriginal = function () {
     preview.classList.add('effects__preview--none');
     preview.classList.remove('effects__preview--chrome');
     preview.classList.remove('effects__preview--sepia');
@@ -68,6 +73,9 @@
     preview.classList.remove('effects__preview--heat');
     document.querySelector('.img-upload__effect-level').classList.add('hidden');
     preview.removeAttribute('style');
+  };
+  originalRadioBtn.addEventListener('click', function () {
+    returnOriginal(); // если оригинал то убираем все классы, скрываем бегунок
   });
   chromeRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--chrome');
@@ -95,25 +103,25 @@
   });
   marvinRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--marvin');
-    document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-    preview.removeAttribute('style');
     preview.classList.remove('effects__preview--none');
     preview.classList.remove('effects__preview--chrome');
     preview.classList.remove('effects__preview--sepia');
     preview.classList.remove('effects__preview--phobos');
     preview.classList.remove('effects__preview--heat');
+    document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+    preview.removeAttribute('style');
     setSliderPosition(1.0);
     controlValue.setAttribute('value', '100%');
   });
   phobosRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--phobos');
-    document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-    preview.removeAttribute('style');
     preview.classList.remove('effects__preview--none');
     preview.classList.remove('effects__preview--chrome');
     preview.classList.remove('effects__preview--sepia');
     preview.classList.remove('effects__preview--marvin');
     preview.classList.remove('effects__preview--heat');
+    document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+    preview.removeAttribute('style');
     setSliderPosition(1.0);
     controlValue.setAttribute('value', '100%');
   });
@@ -182,7 +190,7 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-  // валидация хэш-тэгов///
+  // валидаци€ хэш-тэгов///
   var hashTagTextBox = document.querySelector('.text__hashtags');
   var HASHTAG_MAX_NUM = 5;
   var HASHTAG_MAX_LENGTH = 20;
@@ -202,33 +210,41 @@
     var array = str.split(' ');
     // проверка на длину массива
     if (array.length > HASHTAG_MAX_NUM) {
-      hashTagTextBox.setCustomValidity('нельзя указать больше пяти хэш-тегов');
+      hashTagTextBox.setCustomValidity('нельз€ указать больше п€ти хэш-тегов');
+      hashTagTextBox.style.border = '5px solid red';
       return;
     } else {
       hashTagTextBox.setCustomValidity('');
+      hashTagTextBox.style.border = '1px solid blue';
     }
     // проверка на дубликаты
     if (hasDuplicates(array)) {
       hashTagTextBox.setCustomValidity('один и тот же хэш-тег не может быть использован дважды');
+      hashTagTextBox.style.border = '5px solid red';
       return;
     } else {
       hashTagTextBox.setCustomValidity('');
+      hashTagTextBox.style.border = '1px solid blue';
     }
     for (var index = 0; index < array.length; ++index) {
       var hashtag = array[index];
       if (hashtag[0] !== '#') {
-        hashTagTextBox.setCustomValidity('Хэш-тег должен начинаться с символа # (решётка)');
+        hashTagTextBox.setCustomValidity('’эш-тег должен начинатьс€ с символа # (решЄтка)');
+        hashTagTextBox.style.border = '5px solid red';
         break;
       }
       if (hashtag.length <= 1) {
-        hashTagTextBox.setCustomValidity('хеш-тег не может состоять только из одной решётки');
+        hashTagTextBox.setCustomValidity('хеш-тег не может состо€ть только из одной решЄтки');
+        hashTagTextBox.style.border = '5px solid red';
         break;
       }
       if (hashtag.length > HASHTAG_MAX_LENGTH) {
-        hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решётку');
+        hashTagTextBox.setCustomValidity('максимальна€ длина одного хэш-тега 20 символов, включа€ решЄтку');
+        hashTagTextBox.style.border = '5px solid red';
         break;
       } else {
         hashTagTextBox.setCustomValidity('');
+        hashTagTextBox.style.border = '1px solid blue';
       }
     }
   });
@@ -240,12 +256,14 @@
   // проверка комментариев
   commentTextBox.addEventListener('change', function () {
     if (commentTextBox.value.length > COMMENT_MAX_LENGTH) {
-      commentTextBox.setCustomValidity('длина комментария не может составлять больше 140 символов');
+      commentTextBox.setCustomValidity('длина комментари€ не может составл€ть больше 140 символов');
+      commentTextBox.style.border = '5px solid red';
     } else {
       commentTextBox.setCustomValidity('');
+      commentTextBox.style.border = '1px solid blue';
     }
   });
-  // изменение размера изображения
+  // изменение размера изображени€
   var controlSmall = document.querySelector('.scale__control--smaller');
   var controlBig = document.querySelector('.scale__control--bigger');
   var controlValue = document.querySelector('.scale__control--value');
@@ -283,4 +301,80 @@
       reductImg();
     }
   });
+  var cleanValuesForm = function () {
+    controlValue.setAttribute('value', '100%');
+    // originalRadioBtn.focus(); // не фокусирует
+    originalRadioBtn.checked = true;
+
+    // setSliderPosition(1.0);
+    hashTagTextBox.value = '';
+    commentTextBox.value = '';
+  };
+  // отправка формы
+  // var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  // var mainElement = document.querySelector('main');
+  // var successForm = document.querySelector('.success');
+  // var successTemplateBtn = document.querySelector('.success__button');
+  if ('content' in document.createElement('template')) {
+    // надо допилить функцию котоарИ будет показывать message пока не возникнет событие success или error или
+    // не закончитсИ времИ ожиданиИ => скорее всего надо вынести е™ в upload либо сделать тут в form функцию
+    // loading где мы будем все рисоватть и отображать на загрузку и передать е™ 5ым параметров в upload функцию
+    // и вызвать там
+    // var message = document.querySelector('#messages'); - темплейты длИ процесса загрузки
+    // showTemplate(message);
+    var successTemplate = document.querySelector('#success');
+    // var errorTemplate = document.querySelector('#error');
+    var mainElement = document.getElementsByTagName('main'); // достаем из дом тот элемент, куда
+    // будем добавлИть сообщениИ о загрузке (наш темплейт)
+  }
+  var showTemplate = function (template) {
+    var successTemplateElem = document.querySelector('.success');
+    if (successTemplateElem === null) {
+      var clone = document.importNode(template.content, true);
+      mainElement[0].appendChild(clone);
+    } else {
+      successTemplateElem.classList.remove('visually-hidden');
+    }
+  };
+  var onSuccess = function () {
+    showTemplate(successTemplate);
+    var successTemplateBtn = document.querySelector('.success__button');
+    var successForm = document.querySelector('.success');
+    successTemplateBtn.addEventListener('click', function () {
+      successForm.classList.add('visually-hidden');
+      returnOriginal();
+      cleanValuesForm();
+    });
+    successTemplateBtn.addEventListener('keydown', function (evt) {
+      if ((evt.keyCode === window.ENTER_KEYCODE) && (successTemplateBtn === document.activeElement)) {
+        successForm.classList.add('visually-hidden');
+        returnOriginal();
+        cleanValuesForm();
+      }
+    });
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.ESC_KEYCODE) {
+        if (successForm) {
+          successForm.classList.add('visually-hidden');
+          returnOriginal();
+          cleanValuesForm();
+        }
+      }
+    });
+    document.addEventListener('click', function () { // надо  закрывать по клику за пределами формы
+      if (successForm !== document.activeElement) {
+        successForm.classList.add('visually-hidden');
+        returnOriginal();
+        cleanValuesForm();
+      }
+    });
+    closeForm();
+  };
+  var onError = function (errorMessage) {
+    var errorElement = window.errorTemplate.cloneNode(true);
+    errorElement.querySelector('.error__title').textContent = errorMessage;
+    window.mainElement.appendChild(errorElement);
+    showTemplate(window.errorTemplate);
+    closeForm();
+  };
 })();
