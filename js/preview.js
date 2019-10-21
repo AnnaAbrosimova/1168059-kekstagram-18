@@ -29,7 +29,9 @@
     }
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.ESC_KEYCODE) {
-        window.bigPicture.classList.add('hidden');
+        if (window.bigPicture) {
+          window.bigPicture.classList.add('hidden');
+        }
       }
     });
   };

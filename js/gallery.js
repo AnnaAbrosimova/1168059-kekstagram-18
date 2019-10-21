@@ -25,7 +25,9 @@
   var errorTemplate = document.querySelector('#error')
    .content
    .querySelector('.error');
+  window.errorTemplate = errorTemplate;
   var mainElement = document.querySelector('main');
+  window.mainElement = mainElement;
   var onError = function (errorMessage) {
     var errorElement = errorTemplate.cloneNode(true);
     errorElement.querySelector('.error__title').textContent = errorMessage;
