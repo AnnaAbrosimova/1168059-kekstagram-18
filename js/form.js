@@ -82,7 +82,7 @@
     preview.removeAttribute('style');
   };
   originalRadioBtn.addEventListener('click', function () {
-    returnOriginal(); // если оригинал то убираем все классы, скрываем слайдер
+    returnOriginal(); // если оригинал, то убираем все классы, скрываем слайдер
   });
   chromeRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--chrome');
@@ -218,10 +218,9 @@
     if (str !== '') {
       array = str.split(' ');
     }
-
     // проверка на длину массива
     if (array.length > HASHTAG_MAX_NUM) {
-      hashTagTextBox.setCustomValidity('нельзя указать больше пяти хэш-тегов');
+      hashTagTextBox.setCustomValidity('нельзя указывать больше пяти хэш-тегов');
       hashTagTextBox.style.border = '5px solid red';
       return;
     } else {
@@ -250,7 +249,7 @@
         break;
       }
       if (hashtag.length > HASHTAG_MAX_LENGTH) {
-        hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решетку');
+        hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега - 20 символов, включая решетку');
         hashTagTextBox.style.border = '5px solid red';
         break;
       } else {
@@ -267,7 +266,7 @@
   // проверка комментариев
   commentTextBox.addEventListener('change', function () {
     if (commentTextBox.value.length > COMMENT_MAX_LENGTH) {
-      commentTextBox.setCustomValidity('длина комментари€ не может составл€ть больше 140 символов');
+      commentTextBox.setCustomValidity('длина комментария не может составлять больше 140 символов');
       commentTextBox.style.border = '5px solid red';
     } else {
       commentTextBox.setCustomValidity('');
@@ -349,10 +348,9 @@
       }
     });
     var inner = document.querySelector('.success__inner');
-    inner.addEventListener('click', function (event) {
-      event.cancelBubble = true;
+    inner.addEventListener('click', function (evt) {
+      evt.cancelBubble = true;
     });
-
     successForm.addEventListener('click', function () {
       successForm.classList.add('visually-hidden');
       returnOriginal();
@@ -362,7 +360,6 @@
   };
   var onError = function (errorMessage) {
     document.querySelector('.img-upload__message--loading').classList.add('visually-hidden');
-
     var errorElement = window.errorTemplate.cloneNode(true);
     errorElement.querySelector('.error__title').textContent = errorMessage;
     window.mainElement.appendChild(errorElement);
