@@ -18,11 +18,18 @@
     formEditPicture.classList.remove('hidden');
     imgForm.addEventListener('submit', function (evt) {
       evt.preventDefault();
+
+      var loadingElm = document.querySelector('.img-upload__message--loading');
+      if (loadingElm === null) {
+        var message = document.querySelector('#messages');
+        showTemplate(message);
+      }
+      document.querySelector('.img-upload__message--loading').classList.remove('visually-hidden');
+
       window.upload('https://js.dump.academy/kekstagram', new FormData(imgForm), onSuccess, onError);
     });
     document.addEventListener('keydown', closeFormEsc);
   };
-
   var closeFormEsc = function (evt) {
     if ((evt.keyCode === window.ESC_KEYCODE) && (commentTextBox !== document.activeElement)) {
       closeForm();
@@ -75,7 +82,7 @@
     preview.removeAttribute('style');
   };
   originalRadioBtn.addEventListener('click', function () {
-    returnOriginal(); // если оригинал то убираем все классы, скрываем бегунок
+    returnOriginal(); // если оригинал то убираем все классы, скрываем слайдер
   });
   chromeRadioBtn.addEventListener('click', function () {
     preview.classList.add('effects__preview--chrome');
@@ -190,7 +197,7 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-  // валидаци€ хэш-тэгов///
+  // валидация хэш-тэгов///
   var hashTagTextBox = document.querySelector('.text__hashtags');
   var HASHTAG_MAX_NUM = 5;
   var HASHTAG_MAX_LENGTH = 20;
@@ -207,10 +214,14 @@
   };
   hashTagTextBox.addEventListener('change', function () {
     var str = hashTagTextBox.value.toUpperCase().trim();
-    var array = str.split(' ');
+    var array = [];
+    if (str !== '') {
+      array = str.split(' ');
+    }
+
     // проверка на длину массива
     if (array.length > HASHTAG_MAX_NUM) {
-      hashTagTextBox.setCustomValidity('нельз€ указать больше п€ти хэш-тегов');
+      hashTagTextBox.setCustomValidity('нельзя указать больше пяти хэш-тегов');
       hashTagTextBox.style.border = '5px solid red';
       return;
     } else {
@@ -229,17 +240,17 @@
     for (var index = 0; index < array.length; ++index) {
       var hashtag = array[index];
       if (hashtag[0] !== '#') {
-        hashTagTextBox.setCustomValidity('’эш-тег должен начинатьс€ с символа # (решЄтка)');
+        hashTagTextBox.setCustomValidity('хэш-тег должен начинаться с символа # (решетка)');
         hashTagTextBox.style.border = '5px solid red';
         break;
       }
       if (hashtag.length <= 1) {
-        hashTagTextBox.setCustomValidity('хеш-тег не может состо€ть только из одной решЄтки');
+        hashTagTextBox.setCustomValidity('хеш-тег не может состоять только из одной решетки');
         hashTagTextBox.style.border = '5px solid red';
         break;
       }
       if (hashtag.length > HASHTAG_MAX_LENGTH) {
-        hashTagTextBox.setCustomValidity('максимальна€ длина одного хэш-тега 20 символов, включа€ решЄтку');
+        hashTagTextBox.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решетку');
         hashTagTextBox.style.border = '5px solid red';
         break;
       } else {
@@ -263,7 +274,7 @@
       commentTextBox.style.border = '1px solid blue';
     }
   });
-  // изменение размера изображени€
+  // изменение размера изображения
   var controlSmall = document.querySelector('.scale__control--smaller');
   var controlBig = document.querySelector('.scale__control--bigger');
   var controlValue = document.querySelector('.scale__control--value');
@@ -285,47 +296,21 @@
       preview.style.transform = 'scale(' + (parseInt(val2, 10) - STEP) / 100 + ')';
     }
   };
-  controlBig.addEventListener('keydown', function (evt) {
-    if ((evt.keyCode === window.ENTER_KEYCODE) && (controlBig === document.activeElement)) {
-      zoom();
-    }
-  });
   controlBig.addEventListener('click', function () {
     zoom();
   });
   controlSmall.addEventListener('click', function () {
     reductImg();
   });
-  controlSmall.addEventListener('keydown', function (evt) {
-    if ((evt.keyCode === window.ENTER_KEYCODE) && (controlSmall === document.activeElement)) {
-      reductImg();
-    }
-  });
   var cleanValuesForm = function () {
     controlValue.setAttribute('value', '100%');
-    // originalRadioBtn.focus(); // не фокусирует
     originalRadioBtn.checked = true;
-
-    // setSliderPosition(1.0);
     hashTagTextBox.value = '';
     commentTextBox.value = '';
   };
-  // отправка формы
-  // var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  // var mainElement = document.querySelector('main');
-  // var successForm = document.querySelector('.success');
-  // var successTemplateBtn = document.querySelector('.success__button');
   if ('content' in document.createElement('template')) {
-    // надо допилить функцию котоарИ будет показывать message пока не возникнет событие success или error или
-    // не закончитсИ времИ ожиданиИ => скорее всего надо вынести е™ в upload либо сделать тут в form функцию
-    // loading где мы будем все рисоватть и отображать на загрузку и передать е™ 5ым параметров в upload функцию
-    // и вызвать там
-    // var message = document.querySelector('#messages'); - темплейты длИ процесса загрузки
-    // showTemplate(message);
     var successTemplate = document.querySelector('#success');
-    // var errorTemplate = document.querySelector('#error');
-    var mainElement = document.getElementsByTagName('main'); // достаем из дом тот элемент, куда
-    // будем добавлИть сообщениИ о загрузке (наш темплейт)
+    var mainElement = document.getElementsByTagName('main');
   }
   var showTemplate = function (template) {
     var successTemplateElem = document.querySelector('.success');
@@ -337,6 +322,8 @@
     }
   };
   var onSuccess = function () {
+    document.querySelector('.img-upload__message--loading').classList.add('visually-hidden');
+
     showTemplate(successTemplate);
     var successTemplateBtn = document.querySelector('.success__button');
     var successForm = document.querySelector('.success');
@@ -361,16 +348,21 @@
         }
       }
     });
-    document.addEventListener('click', function () { // надо  закрывать по клику за пределами формы
-      if (successForm !== document.activeElement) {
-        successForm.classList.add('visually-hidden');
-        returnOriginal();
-        cleanValuesForm();
-      }
+    var inner = document.querySelector('.success__inner');
+    inner.addEventListener('click', function (event) {
+      event.cancelBubble = true;
+    });
+
+    successForm.addEventListener('click', function () {
+      successForm.classList.add('visually-hidden');
+      returnOriginal();
+      cleanValuesForm();
     });
     closeForm();
   };
   var onError = function (errorMessage) {
+    document.querySelector('.img-upload__message--loading').classList.add('visually-hidden');
+
     var errorElement = window.errorTemplate.cloneNode(true);
     errorElement.querySelector('.error__title').textContent = errorMessage;
     window.mainElement.appendChild(errorElement);
