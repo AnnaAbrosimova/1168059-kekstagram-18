@@ -12,19 +12,11 @@
           id = evt.target.getAttribute('id');
         } else {
           src = evt.target.querySelector('.picture__img').getAttribute('src');
+          id = evt.target.querySelector('.picture__img').getAttribute('id');
         }
         bigPicturePhotoImg.setAttribute('src', src);
         window.setBigPicture(id);
         window.bigPicture.classList.remove('hidden');
-      });
-      randomImage[i].addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.ENTER_KEYCODE) {
-          var src = evt.target.querySelector('.picture__img').getAttribute('src');
-          var id = evt.target.querySelector('.picture__img').getAttribute('id');
-          window.setBigPicture(id);
-          bigPicturePhotoImg.setAttribute('src', src);
-          window.bigPicture.classList.remove('hidden');
-        }
       });
     }
     document.addEventListener('keydown', function (evt) {
