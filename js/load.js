@@ -1,10 +1,11 @@
 'use strict';
 (function () {
+  var ACCEPT_PROCESS = 200;
   window.load = function (url, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === ACCEPT_PROCESS) {
         onSuccess(xhr.response);
         window.preview();
         window.respPhotos = xhr.response;
@@ -26,7 +27,7 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === ACCEPT_PROCESS) {
         onSuccess();
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);

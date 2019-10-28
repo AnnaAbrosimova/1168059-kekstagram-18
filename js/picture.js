@@ -11,9 +11,9 @@
     var commentsLoad = document.querySelector('.comments-loader');
     var socCommentCount = document.querySelector('.social__comment-count');
     var showComments = function (amount, photos) {
-      var arrayAmount = socCommentCount.innerHTML.split(' ');
-      arrayAmount[0] = amount;
-      socCommentCount.innerHTML = arrayAmount.join(' ');
+      var amountComments = socCommentCount.innerHTML.split(' ');
+      amountComments[0] = amount;
+      socCommentCount.innerHTML = amountComments.join(' ');
       var oldComments = document.querySelectorAll('.social__comment');
       if (oldComments.length > 0) {
         for (var k = 0; k < oldComments.length; k++) {

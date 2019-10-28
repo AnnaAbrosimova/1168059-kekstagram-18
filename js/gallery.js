@@ -1,19 +1,19 @@
 'use strict';
 (function () {
-  var similarListElement = document.querySelector('.pictures');
+  var similarList = document.querySelector('.pictures');
   var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   window.renderPhotos = function (photo, i) {
-    var photoElement = similarPictureTemplate.cloneNode(true);
-    photoElement.querySelector('.picture__img').setAttribute('src', photo.url);
-    photoElement.querySelector('.picture__likes').textContent = photo.likes;
-    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    photoElement.querySelector('.picture__img').setAttribute('id', i);
-    return photoElement;
+    var clonePhoto = similarPictureTemplate.cloneNode(true);
+    clonePhoto.querySelector('.picture__img').setAttribute('src', photo.url);
+    clonePhoto.querySelector('.picture__likes').textContent = photo.likes;
+    clonePhoto.querySelector('.picture__comments').textContent = photo.comments.length;
+    clonePhoto.querySelector('.picture__img').setAttribute('id', i);
+    return clonePhoto;
   };
   window.clearPhotosContainer = function () {
     for (var i = 0; i < window.currentPhotos.length; i++) {
       var link = document.getElementById(i).parentNode;
-      similarListElement.removeChild(link);
+      similarList.removeChild(link);
     }
     window.currentPhotos = [];
   };
@@ -23,7 +23,7 @@
     for (var i = 0; i < photos.length; i++) {
       fragment.appendChild(window.renderPhotos(photos[i], i));
     }
-    similarListElement.appendChild(fragment);
+    similarList.appendChild(fragment);
   };
   window.data = [];
   var onSuccess = function (photos) {
@@ -38,12 +38,12 @@
    .content
    .querySelector('.error');
   window.errorTemplate = errorTemplate;
-  var mainElement = document.querySelector('main');
-  window.mainElement = mainElement;
+  var main = document.querySelector('main');
+  window.main = main;
   var onError = function (errorMessage) {
-    var errorElement = errorTemplate.cloneNode(true);
-    errorElement.querySelector('.error__title').textContent = errorMessage;
-    mainElement.appendChild(errorElement);
+    var error = errorTemplate.cloneNode(true);
+    error.querySelector('.error__title').textContent = errorMessage;
+    main.appendChild(error);
   };
   window.load('https://js.dump.academy/kekstagram/data', onSuccess, onError);
 })();
