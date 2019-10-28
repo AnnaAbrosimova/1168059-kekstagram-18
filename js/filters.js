@@ -8,8 +8,8 @@
     switch (filterID) {
       case 'popularFilter':
         window.clearPhotosContainer();
-
         window.fillInPhotosContainer(window.originPhotos);
+        window.preview();
         break;
       case 'randomFilter':
         window.clearPhotosContainer();
@@ -21,12 +21,14 @@
           }
         }
         window.fillInPhotosContainer(photos);
+        window.preview();
         break;
       case 'discussFilter':
         window.clearPhotosContainer();
         photos = window.originPhotos.slice();
         photos.sort(sortDiscussed);
         window.fillInPhotosContainer(photos);
+        window.preview();
         break;
     }
   };
